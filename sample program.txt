@@ -1,0 +1,11 @@
+x = IV - I;
+input c ;
+y = III;
+if x > I then
+ if y > II then
+  print XIX;
+ else
+  print XX;
+ end;
+end;
+if x < V then print XXXV; end;

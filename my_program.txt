@@ -1,0 +1,7 @@
+x = I;
+y = II;
+if x + IX <= y * V then
+ print V + I + I + I - IX;
+else
+ print I;
+end;
