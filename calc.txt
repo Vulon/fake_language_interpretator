@@ -1,0 +1,15 @@
+input a;
+input b;
+input op;
+if op == I then 
+	print a + b;
+end;
+if op == II then 
+	print a - b;
+end;
+if op == III then
+	print a * b;
+end;
+if op == IV then
+	print a / b;
+end;

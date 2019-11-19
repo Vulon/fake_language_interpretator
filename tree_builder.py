@@ -7,7 +7,7 @@ import re
 
 
 reserved_keywords = ['if', 'then', 'else', 'end', 'print']
-reserved_compare_words = ['>', '<', '=', '<=', '>=']
+reserved_compare_words = ['>', '<', '==', '<=', '>=']
 reserved_arithmetic_operations = {
     '+': (lambda a, b : a + b),
     '-': (lambda a, b : a - b),
@@ -78,6 +78,7 @@ def create_var(token):
     else:
         return token_tree.Variable('num', num)
 
+
 def build_tree(tokens):
     if len(tokens) < 1:
         return token_tree.TokenTree()
@@ -144,7 +145,7 @@ def build_tree(tokens):
             x = coma_index + 1
         else:
             print('Token', tokens[x], 'is not identified for x', x)
-            raise Exception("Token ", tokens[x], 'is not identified')
+            x = x + 1
 
     return tree
 

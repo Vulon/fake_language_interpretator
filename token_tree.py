@@ -5,6 +5,7 @@
 nodeTypes = ('print', 'var_init', 'input', 'return')
 chain_root_values = ('then', 'else', 'child')
 
+
 class ArithmeticExpression(object):
 
     def __init__(self, polish_statement):
@@ -36,6 +37,7 @@ class ArithmeticExpression(object):
             else:
                 string += str(v.data) + ' '
         return string
+
 
 class Variable(object):
     #data types: var, num
