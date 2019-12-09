@@ -1,0 +1,16 @@
+fdsfj fds;
+fd
+a = fd;
+fd = V;
+V = V;
+print as;
+if x > y then
+ f = g + g;
+end;
+if I + V < I V then
+ c = I + IV +;
+end;
+d = I + IV +;
+print jkfld ;
+print I + V + II - IV
+

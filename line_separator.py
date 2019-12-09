@@ -7,6 +7,7 @@ def readFile(path = r'sample program.txt'):
 
 def do_text_preprocess(text):
     text = re.sub(r'\b;', ' ;', text)
+    text = re.sub(r'[a-zA-Z_0-9\+\-\*\\/()];', ' ;', text)
     text = re.sub(r'\s', ' ', text)
     text = re.sub(r'\n', ' ', text)
     text = re.sub(r'\s+', ' ', text)

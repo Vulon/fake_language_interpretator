@@ -16,16 +16,25 @@ class ArithmeticExpression(object):
         temp_store = []
         for v in self.storage:
             if v in reserved_arithmetic_operations.keys():
+                if len(temp_store) < 2:
+                    print("ERROR!!!!__________Could not execute statement", self.to_string())
+                    return None
                 a = temp_store.pop()
                 a = a.getValue(stack)
                 b = temp_store.pop()
                 b = b.getValue(stack)
+                if a is None or b is None:
+                    print("ERROR!!!!__________Could not get variable value", self.to_string())
+                    return None
                 value = reserved_arithmetic_operations[v](b, a)
                 var = Variable('num', value)
                 temp_store.append(var)
             else:
                 temp_store.append(v)
         var = temp_store.pop()
+        if len(temp_store) > 0:
+            print("ERROR!!!!__________Error executing statement: ", self.to_string())
+            return None
         return var.getValue(stack)
 
     def to_string(self):
@@ -58,7 +67,10 @@ class Variable(object):
         return string
 
     def getValue(self, stack):
+
         if self.var_type.__eq__('var'):
+            if self.data not in stack.keys():
+                return None
             return stack[self.data]
         else:
             return self.data
@@ -77,6 +89,9 @@ class CompareExpression:
     def executeCompare(self, stack, verbose=True):
         a = self.first_expression.getValue(stack)
         b = self.second_expression.getValue(stack)
+        if a is None or b is None:
+            print("Could not execute compare statement", self.to_string())
+            return None
         if verbose:
             print("Comparing: ", self.to_string(), 'a, b:', a, b)
         if self.compare_operator == '<':
@@ -101,7 +116,7 @@ class ExpressionNode(object):
         self.value = value
         self.child = None
         if node_type not in nodeTypes:
-            raise Exception("Incorrect type")
+            raise Exception("Incorrect node type")
 
     def add_node(self, child):
         self.child = child
@@ -111,7 +126,7 @@ class ExpressionNode(object):
         if self.node_type == 'print':
             string += self.value.to_string()
         elif self.node_type == 'var_init':
-            string += self.value[0].data + '=' + self.value[1].to_string()
+            string += str(self.value[0].data) + '=' + str(self.value[1].to_string())
         elif self.node_type == 'input':
             string += str(self.value.to_string())
         return string
@@ -119,6 +134,9 @@ class ExpressionNode(object):
 
     def executeExpression(self, stack, verbose=True):
         if self.node_type == 'print':
+            value = self.value.getValue(stack)
+            if value is None:
+                return None
             if verbose:
                 print("Printing ", self.value.getValue(stack))
             print(self.value.getValue(stack))
@@ -128,12 +146,22 @@ class ExpressionNode(object):
             right_exp = self.value[1]
             if verbose:
                 print("Initializing ", left_exp.to_string(), '=', right_exp.getValue(stack))
+
+            if right_exp.getValue(stack) is None:
+                print("ERROR!!!!__________Could not get right value")
+                return None
+            if left_exp.var_type != 'var':
+                print("Left expression must be a Variable")
+                return None
+
             stack[left_exp.data] = right_exp.getValue(stack)
         elif self.node_type == 'input':
             from tree_builder import checkRomanNumber
             print('Please enter roman number: ')
             num = checkRomanNumber(input())
+
             if num is None:
+                print("ERROR!!!!__________Could not process input.")
                 num = 0
             if verbose:
                 print("inputed ", num, 'to', self.value.data)
@@ -297,6 +325,11 @@ class TreeExecutor(object):
                 if node.chain_root == 'unseen':
                     compareExpr = node.value
                     res = compareExpr.executeCompare(stack, verbose)
+                    if res is None:
+                        print("ERROR!!!!__________Could not execute Compare", compareExpr.to_string())
+                        node.chain_root = 'child'
+                        node = node.child
+                        continue
                     if res:
                         if verbose:
                             print("went to then root")
